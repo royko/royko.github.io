@@ -1,0 +1,48 @@
+<html>
+<head>
+<style>
+
+body {
+background-color: #000000;
+color: #ffffaa;
+}
+
+.scrolling-image-container {
+  overflow: hidden;
+}
+
+.scrolling-image {
+  background: url("./7x3.jpg") repeat-x;
+  height: 564px;  /* image height */
+  width: 14400px; /* double image width */
+  animation: slide 100s linear infinite;
+}
+
+@keyframes slide {
+  0% {
+    transform: translate(0);
+  }
+  100% {
+    transform: translate(-7200px); /* image width */
+  }
+}
+
+/*
+animation based on:
+https://blog.logrocket.com/creating-infinite-css-background-image-loop/
+*/
+
+</style>
+</head>
+<body>
+
+<p>pano1</p>
+
+<div class="scrolling-image-container">
+  <div class="scrolling-image"></div>
+</div>
+
+</body>
+</html>
+
+
