@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload with Word Count</title>
+    <style>
+        .upload-container {
+            width: 400px;
+            margin: 20px;
+        }
+
+        .dropzone {
+            width: 100%;
+            height: 200px;
+            border: 3px dashed #666;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+
+        .dropzone.dragover {
+            background-color: #e1e1e1;
+            border-color: #333;
+        }
+
+        .file-input {
+            margin: 20px 0;
+        }
+
+        #fileList {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        .word-count {
+            color: #0066cc;
+            font-weight: bold;
+        }
+
+        .error {
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="upload-container">
+        <h1>Text File Word Counter</h1>
+
+        <!-- Traditional file input -->
+        <div class="file-input">
+            <input type="file" id="fileInput" multiple accept=".txt,.doc,.docx,.rtf">
+            <button onclick="uploadFiles()">Upload Files</button>
+        </div>
+
+        <!-- Drag and drop zone -->
+        <div id="dropzone" class="dropzone">
+            <p>Drag and drop text files here</p>
+            <p>or</p>
+            <p>Click to select files</p>
+        </div>
+
+        <!-- File list -->
+        <div id="fileList"></div>
+    </div>
+
+    <script>
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        let files = [];
+
+        // Make dropzone clickable
+        dropzone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Handle selected files from input
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        // Drag and drop handlers
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        // Handle the files
+        function handleFiles(fileList) {
+            files = [...fileList];
+            displayFiles();
+        }
+
+        // Count words in text
+        function countWords(text) {
+            // Remove extra whitespace and split by whitespace
+            return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+        }
+
+        // Read and count words in a file
+        async function processFile(file) {
+            try {
+                const text = await file.text();
+                return countWords(text);
+            } catch (error) {
+                console.error('Error reading file:', error);
+                return -1;
+            }
+        }
+
+        // Display files in the list
+        async function displayFiles() {
+            fileList.innerHTML = '';
+            
+            for (const file of files) {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                
+                // Initial display
+                fileItem.innerHTML = `
+                    <div>${file.name} (${formatFileSize(file.size)})</div>
+                    <div>Counting words...</div>
+                    <button onclick="removeFile('${file.name}')">Remove</button>
+                `;
+                fileList.appendChild(fileItem);
+
+                // Process file and update display
+                if (file.type.includes('text') || file.name.endsWith('.txt')) {
+                    const wordCount = await processFile(file);
+                    if (wordCount >= 0) {
+                        fileItem.children[1].innerHTML = `Word count: <span class="word-count">${wordCount}</span>`;
+                    } else {
+                        fileItem.children[1].innerHTML = '<span class="error">Error counting words</span>';
+                    }
+                } else {
+                    fileItem.children[1].innerHTML = '<span class="error">Not a text file</span>';
+                }
+            }
+        }
+
+        // Remove file from list
+        function removeFile(fileName) {
+            files = files.filter(file => file.name !== fileName);
+            displayFiles();
+        }
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Upload files function
+        function uploadFiles() {
+            if (files.length === 0) {
+                alert('Please select files first!');
+                return;
+            }
+            alert('Upload functionality needs a server to handle the files.');
+        }
+    </script>
+</body>
+</html>

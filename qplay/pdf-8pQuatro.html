@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>8-Page PDF Converter</title>
+    <style>
+        .upload-container {
+            width: 600px;
+            margin: 20px;
+        }
+
+        .dropzone {
+            width: 100%;
+            height: 200px;
+            border: 3px dashed #666;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+
+        .dropzone.dragover {
+            background-color: #e1e1e1;
+            border-color: #333;
+        }
+
+        .file-input {
+            margin: 20px 0;
+        }
+
+        #fileList {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        .progress {
+            margin-top: 10px;
+            color: #0066cc;
+        }
+
+        .error {
+            color: #ff0000;
+        }
+
+        .success {
+            color: #008000;
+        }
+    </style>
+    <!-- Load PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <!-- Load jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <div class="upload-container">
+        <h1>8-Page PDF Converter</h1>
+        <p>Upload a PDF file with exactly 8 pages to convert to 2-page layout</p>
+
+        <div class="file-input">
+            <input type="file" id="fileInput" accept=".pdf">
+            <button onclick="processPDF()" id="convertBtn" disabled>Convert to 4-up</button>
+        </div>
+
+        <div id="dropzone" class="dropzone">
+            <p>Drag and drop a PDF file here</p>
+            <p>or</p>
+            <p>Click to select file</p>
+            <p><small>Only 8-page PDF files are accepted</small></p>
+        </div>
+
+        <div id="fileList"></div>
+    </div>
+
+    <script>
+        // Initialize PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const dropzone = document.getElementById('dropzone');
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const convertBtn = document.getElementById('convertBtn');
+        let currentFile = null;
+
+        // Make dropzone clickable
+        dropzone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Handle selected file from input
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                validateAndSetFile(e.target.files[0]);
+            }
+        });
+
+        // Drag and drop handlers
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('dragover');
+        });
+
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('dragover');
+        });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('dragover');
+            if (e.dataTransfer.files.length > 0) {
+                validateAndSetFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        async function validateAndSetFile(file) {
+            if (!file.type.includes('pdf')) {
+                displayError('Please upload a PDF file.');
+                return;
+            }
+
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+                const pageCount = pdf.numPages;
+
+                if (pageCount === 8) {
+                    currentFile = file;
+                    displayFileInfo(true);
+                    convertBtn.disabled = false;
+                } else {
+                    displayError(`PDF must have exactly 8 pages. This PDF has ${pageCount} pages.`);
+                    convertBtn.disabled = true;
+                }
+            } catch (error) {
+                displayError('Error reading PDF file. Please try again.');
+                convertBtn.disabled = true;
+            }
+        }
+
+        function displayFileInfo(isValid = false) {
+            fileList.innerHTML = `
+                <div class="file-item">
+                    <div>${currentFile.name} (${formatFileSize(currentFile.size)})</div>
+                    ${isValid ? '<div class="success">✓ Valid 8-page PDF</div>' : ''}
+                    <div id="progress"></div>
+                </div>
+            `;
+        }
+
+        function displayError(message) {
+            fileList.innerHTML = `
+                <div class="file-item">
+                    <div class="error">${message}</div>
+                </div>
+            `;
+            currentFile = null;
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        async function processPDF() {
+            if (!currentFile) {
+                alert('Please select a valid 8-page PDF file first!');
+                return;
+            }
+
+            const progressDiv = document.getElementById('progress');
+            progressDiv.innerHTML = 'Processing PDF...';
+            convertBtn.disabled = true;
+
+            try {
+                const arrayBuffer = await currentFile.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+                
+                // Create new PDF with jsPDF
+                const outputPdf = new jspdf.jsPDF({
+                    orientation: 'portrait',
+                    unit: 'pt'
+                });
+
+                // Calculate dimensions for 2x2 layout
+                const margin = 20;
+                const pageWidth = outputPdf.internal.pageSize.getWidth();
+                const pageHeight = outputPdf.internal.pageSize.getHeight();
+                const usableWidth = pageWidth - (2 * margin);
+                const usableHeight = pageHeight - (2 * margin);
+                const subPageWidth = usableWidth / 2;
+                const subPageHeight = usableHeight / 2;
+
+                // Process 8 pages into 2 output pages
+                for (let outputPage = 0; outputPage < 2; outputPage++) {
+                    if (outputPage > 0) {
+                        outputPdf.addPage();
+                    }
+
+                    // Process 4 pages for current output page
+                    for (let j = 0; j < 4; j++) {
+                        const pageNum = outputPage * 4 + j + 1;
+                        progressDiv.innerHTML = `Processing page ${pageNum} of 8...`;
+                        
+                        // Get page
+                        const page = await pdf.getPage(pageNum);
+                        const viewport = page.getViewport({ scale: 1.0 });
+                        
+                        // Calculate scale to fit quarter page
+                        const scaleX = subPageWidth / viewport.width;
+                        const scaleY = subPageHeight / viewport.height;
+                        const scale = Math.min(scaleX, scaleY);
+                        
+                        // Create canvas for the page
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        
+                        // Set rotation for pages 4 and 5
+                        let rotation = 0;
+                        if (3 <= pageNum && pageNum <= 6) {
+                            rotation = 180;
+                        }
+                        
+                        // Get viewport with rotation if needed
+                        const scaledViewport = page.getViewport({ 
+                            scale: scale,
+                            rotation: rotation 
+                        });
+                        
+                        canvas.width = scaledViewport.width;
+                        canvas.height = scaledViewport.height;
+                        
+                        // Render PDF page to canvas
+                        await page.render({
+                            canvasContext: context,
+                            viewport: scaledViewport
+                        }).promise;
+                        
+                        // Calculate position for current quarter
+                        const x = margin + (j % 2) * subPageWidth;
+                        const y = margin + Math.floor(j / 2) * subPageHeight;
+                        
+                        // For rotated pages, adjust position to center the content
+                        let finalX = x;
+                        let finalY = y;
+                        if (rotation === 180) {
+                            finalX = x + subPageWidth - scaledViewport.width;
+                            finalY = y + subPageHeight - scaledViewport.height;
+                        }
+                        
+                        // Add to output PDF
+                        outputPdf.addImage(
+                            canvas.toDataURL('image/jpeg', 0.95),
+                            'JPEG',
+                            finalX,
+                            finalY,
+                            scaledViewport.width,
+                            scaledViewport.height
+                        );
+
+                        // Add page number indicator
+                        outputPdf.setFontSize(8);
+                        outputPdf.text(
+                            `Page ${pageNum}`,
+                            x + 5,
+                            y + subPageHeight - 5,
+                            { baseline: 'bottom' }
+                        );
+                    }
+                }
+
+                // Save the output PDF
+                const outputFileName = currentFile.name.replace('.pdf', '_4up_rotated.pdf');
+                outputPdf.save(outputFileName);
+                progressDiv.innerHTML = '<span class="success">Conversion completed! Download started.</span>';
+                convertBtn.disabled = false;
+
+            } catch (error) {
+                console.error('Error processing PDF:', error);
+                progressDiv.innerHTML = '<span class="error">Error processing PDF. Please try again.</span>';
+                convertBtn.disabled = false;
+            }
+        }
+
+    </script>
+</body>
+</html>
