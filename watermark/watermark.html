@@ -1,0 +1,197 @@
+<html><head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  </head><body>
+    <h3>Experiments in invisible watermarking of colour images.</h3>
+
+<center>
+  <table>
+    <tbody><tr>
+      <th>Original image</th>
+      <th>Watermarked image (LSB of each colour replaced)</th>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.png"></td>
+      <td><img src="watermark_files/earth.wd.png"></td>
+    </tr>
+</tbody></table>
+
+<p>
+Image split into R G and B channels:
+</p><table>
+    <tbody><tr>
+      <th>R</th>
+      <th>G</th>
+      <th>B</th>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.r.png"></td>
+      <td><img src="watermark_files/earth.g.png"></td>
+      <td><img src="watermark_files/earth.b.png"></td>
+    </tr>
+</tbody></table>
+
+<p>
+Split each channel into 8 bit planes, from most to least significant:
+</p><table>
+    <tbody><tr>
+      <th>R</th>
+      <th>G</th>
+      <th>B</th>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.r7.png"></td>
+      <td><img src="watermark_files/earth.g7.png"></td>
+      <td><img src="watermark_files/earth.b7.png"></td>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.r6.png"></td>
+      <td><img src="watermark_files/earth.g6.png"></td>
+      <td><img src="watermark_files/earth.b6.png"></td>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.r5.png"></td>
+      <td><img src="watermark_files/earth.g5.png"></td>
+      <td><img src="watermark_files/earth.b5.png"></td>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.r4.png"></td>
+      <td><img src="watermark_files/earth.g4.png"></td>
+      <td><img src="watermark_files/earth.b4.png"></td>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.r3.png"></td>
+      <td><img src="watermark_files/earth.g3.png"></td>
+      <td><img src="watermark_files/earth.b3.png"></td>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.r2.png"></td>
+      <td><img src="watermark_files/earth.g2.png"></td>
+      <td><img src="watermark_files/earth.b2.png"></td>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.r1.png"></td>
+      <td><img src="watermark_files/earth.g1.png"></td>
+      <td><img src="watermark_files/earth.b1.png"></td>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.r0.png"></td>
+      <td><img src="watermark_files/earth.g0.png"></td>
+      <td><img src="watermark_files/earth.b0.png"></td>
+    </tr>
+</tbody></table>
+
+<p>
+Bilevel images to use as watermarks:
+</p><table>
+    <tbody><tr>
+      <th>R</th>
+      <th>G</th>
+      <th>B</th>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.rw.png"></td>
+      <td><img src="watermark_files/earth.gw.png"></td>
+      <td><img src="watermark_files/earth.bw.png"></td>
+    </tr>
+</tbody></table>
+
+<p>
+Replace least significant bit plane of each channel with watermark, combine into grayscale image:
+</p><table>
+    <tbody><tr>
+      <th>R</th>
+      <th>G</th>
+      <th>B</th>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.rwd.png"></td>
+      <td><img src="watermark_files/earth.gwd.png"></td>
+      <td><img src="watermark_files/earth.bwd.png"></td>
+    </tr>
+</tbody></table>
+
+<p>
+Combine grayscale images into watermarked colour image:
+</p><table>
+    <tbody><tr>
+      <th>original</th>
+      <th>watermarked</th>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.png"></td>
+      <td><img src="watermark_files/earth.wd.png"></td>
+    </tr>
+    <tr>
+      <th>difference between images (stretched contrast)</th>
+      <th>3-channel watermark</th>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/earth.diff.png"></td>
+      <td><img src="watermark_files/earth.w.png"></td>
+    </tr>
+</tbody></table>
+
+<hr>
+
+<p>
+Another sample:
+</p><table>
+    <tbody><tr>
+      <th>Original image</th>
+      <th>Watermarked image</th>
+      <th>watermark</th>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/koala.png"></td>
+      <td><img src="watermark_files/koala.wd.png"></td>
+      <td><img src="watermark_files/koala.w.png"></td>
+    </tr>
+</tbody></table>
+
+<p>
+Replacing more than 1 bit plane:
+</p><table>
+    <tbody><tr>
+      <th>Original image</th>
+      <th>Watermarked image</th>
+      <th>watermark</th>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/koala.png"></td>
+      <td><img src="watermark_files/koala.w2d.png"></td>
+      <td><img src="watermark_files/koala.w2r.png"></td>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/koala.png"></td>
+      <td><img src="watermark_files/koala.w3d.png"></td>
+      <td><img src="watermark_files/koala.w3r.png"></td>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/koala.png"></td>
+      <td><img src="watermark_files/koala.w4d.png"></td>
+      <td><img src="watermark_files/koala.w4r.png"></td>
+    </tr>
+    <tr>
+      <td></td><td>
+	Above image data is half koala, half Earth.<br>
+        Below image data is more Earth than koala (5:3).
+      </td><td></td>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/koala.png"></td>
+      <td><img src="watermark_files/koala.w5d.png"></td>
+      <td><img src="watermark_files/koala.w5r.png"></td>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/koala.png"></td>
+      <td><img src="watermark_files/koala.w6d.png"></td>
+      <td><img src="watermark_files/koala.w6r.png"></td>
+    </tr>
+    <tr>
+      <td><img src="watermark_files/koala.png"></td>
+      <td><img src="watermark_files/koala.w7d.png"></td>
+      <td><img src="watermark_files/koala.w7r.png"></td>
+    </tr>
+</tbody></table>
+
+</center></body></html>
