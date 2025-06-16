@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stub calc</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .calculator {
+            margin-top: 20px;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        .result p {
+            font-weight: bold;
+        }
+        .red-result {
+            color: red;
+        }
+        .green-date {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stub calc</h1>
+    
+    <div class="calculator">
+        <label for="numberInput">From your pay stub (any one from 2024, or 2025 up to June 10), under the "Hours and Earnings" section, enter your "Regular Salary" from the "Current Earnings" column*:</label>
+        <input type="text" id="numberInput">
+    </div>
+    
+    <div class="results">
+
+      <!--
+        <div class="result">
+            <p>3% more than that will be: <span id="result1">0.00</span></p>
+        </div>
+	-->
+
+        </br>
+	
+        <div class="result">
+            <p>From April 1, 2024, to March 31, 2025, you earned*: <span id="result2">0.00</span></p>
+        </div>
+        
+        <div class="result">
+            <p>You should get an additional 3% of that: <span id="result3" class="red-result">0.00</span></p>
+        </div>
+        
+        <div class="result">
+            <p>added to your <span class="green-date">June 24</span> paycheque, so the total should be*: <span id="result4" class="red-result">0.00</span></p>
+        </div>
+
+        </br>
+		
+        <div class="result">
+            <p>From April 1, 2025, to June 30, 2025, you earned: <span id="resultE">0.00</span></p>
+        </div>
+        
+        <div class="result">
+            <p>But you should have earned 3% more for last year's pay increase, plus 3% for this year's: <span id="resultF">0.00</span></p>
+        </div>
+        
+        <div class="result">
+            <p>The difference is: <span id="resultG" class="red-result">0.00</span></p>
+        </div>
+        
+        <div class="result">
+            <p>And this should be added to your <span class="green-date">July 10</span> paycheque, so the total should be*: <span id="resultH" class="red-result">0.00</span></p>
+        </div>
+
+	</br>
+	
+        <div class="result">
+            <p>As of the <span class="green-date">July 25</span> paycheque, your new pay rate should be 6.09% higher: <span id="resultI" class="red-result">0.00</span></p>
+        </div>
+
+	</br>
+	
+        <div class="result">
+          <p>By stalling the negotiations of the collective agreement,
+	    the university could have made at least
+	    <span id="resultJ">0.00</span>
+	    by investing the money at a measly 2% interest,
+	    from your paycheque alone.
+	    (BOC rate went from 5% to 2.75% during that time.
+	    NASA represents 6000+ staff, so...  Couple of million bucks?)</p>
+        </div>
+    </div>
+
+    <div>
+      </br>
+      <p>* Assumptions:
+	<ul>
+	  <li>You made the same amount for the last 15 months.  If you moved up on the pay grid, the retro pay numbers will be off.  But if you use a recent pay stub, the new pay rate should be correct.</li>
+	  <li>This does not account for any unpaid leave, and if you changed PLP level in 2024, the retro pay numbers will be off.</li>
+	  <li>Any danger pay, meal allowances, and other such gravy are not accounted for.</li>
+	  <li>Calcs use gross pay.  After deductions, the picture will look less rosy.</li>
+	  <li>This tool was made using AI, so it could be a complete hallucination.</li>
+	</ul>
+      </p>
+    </div>
+
+    <script>
+        const numberInput = document.getElementById('numberInput');
+        //const result1Span = document.getElementById('result1');
+        const result2Span = document.getElementById('result2');
+        const result3Span = document.getElementById('result3');
+        const result4Span = document.getElementById('result4');
+        const resultESpan = document.getElementById('resultE');
+        const resultFSpan = document.getElementById('resultF');
+        const resultGSpan = document.getElementById('resultG');
+        const resultHSpan = document.getElementById('resultH');
+        const resultISpan = document.getElementById('resultI');
+        const resultJSpan = document.getElementById('resultJ');
+
+        // Set focus to the input field when the page loads
+        window.onload = function() {
+            numberInput.focus();
+        };
+      
+        numberInput.addEventListener('input', calculateResults);
+        
+        function calculateResults() {
+            const inputValue = parseFloat(numberInput.value) || 0;
+            
+            // Calculation 1: 3% more than input
+            //const result1 = inputValue * 1.03;
+            //result1Span.textContent = result1.toFixed(2);
+
+	    
+            // Calculation 2: 24 times the input
+            const result2 = inputValue * 24;
+            result2Span.textContent = result2.toFixed(2);
+            
+            // Calculation 3: input * 24 * 0.03
+            const result3 = inputValue * 24 * 0.03;
+            result3Span.textContent = result3.toFixed(2);
+            
+            // Calculation 4: input + result3
+            const result4 = inputValue + (inputValue * 24 * 0.03);
+            result4Span.textContent = result4.toFixed(2);
+
+	
+            // Calculation E: Input * 6
+            const resultE = inputValue * 6;
+            resultESpan.textContent = resultE.toFixed(2);
+            
+            // Calculation F: E * 1.03 * 1.03
+            const resultF = resultE * 1.03 * 1.03;
+            resultFSpan.textContent = resultF.toFixed(2);
+            
+            // Calculation G: F - E
+            const resultG = resultF - resultE;
+            resultGSpan.textContent = resultG.toFixed(2);
+            
+            // Calculation H: Input + G
+            const resultH = inputValue + resultG;
+            resultHSpan.textContent = resultH.toFixed(2);
+
+	
+            // Calculation I: Input * 1.03 * 1.03
+            const resultI = inputValue * 1.03 * 1.03;
+            resultISpan.textContent = resultI.toFixed(2);
+
+	
+            // Calculation J: (Result3 + Result7) * 1.02
+            const resultJ = (result3*0.1506 + resultG*0.0048);
+            resultJSpan.textContent = resultJ.toFixed(2);
+        }
+    </script>
+</body>
+</html>
