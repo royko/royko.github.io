@@ -35,66 +35,67 @@
     <h1>Stub calc</h1>
     
     <div class="calculator">
-        <label for="numberInput">From your pay stub (any one from 2024, or 2025 up to June 10), under the "Hours and Earnings" section, enter your "Regular Salary" from the "Current Earnings" column*:</label>
+      <p>From your pay stub (any one from 2024, or 2025 up to June 10), under the "Hours and Earnings" section, from the "Current Earnings" column, enter...</p>
+        <label for="numberInput">Regular Salary:</label>
         <input type="text" id="numberInput">
+        <br><br>
+        <label for="marketSupplement">Market Supplement:</label>
+        <input type="text" id="marketSupplement">
     </div>
     
     <div class="results">
-
-      <!--
+        </br>
+        
         <div class="result">
-            <p>3% more than that will be: <span id="result1">0.00</span></p>
+            <p>As of the <span class="green-date">June 25</span> paycheque, your new pay rate should be 6.09% higher: <span id="resultH" class="red-result">0.00</span></p>
         </div>
-	-->
-
+        
+        <div class="result">
+            <p>Your market supplement will be: <span id="resultH2" class="red-result">0.00</span></p>
+        </div>
+        
         </br>
 	
         <div class="result">
-            <p>From April 1, 2024, to March 31, 2025, you earned*: <span id="result2">0.00</span></p>
+            <p>From April 1, 2024, to March 31, 2025, you earned*: <span id="resultA">0.00</span> + <span id="resultA2">0.00</span></p>
         </div>
         
         <div class="result">
-            <p>You should get an additional 3% of that: <span id="result3" class="red-result">0.00</span></p>
+            <p>You should get an additional 3% of that: <span id="resultB" class="red-result">0.00</span></p>
         </div>
         
         <div class="result">
-            <p>added to your <span class="green-date">June 24</span> paycheque, so the total should be*: <span id="result4" class="red-result">0.00</span></p>
+            <p>added to your <span class="green-date">June 25</span> paycheque, so the total should be (bottom right, TOTAL GROSS, Current): <span id="resultC" class="red-result">0.00</span></p>
         </div>
 
         </br>
 		
         <div class="result">
-            <p>From April 1, 2025, to June 30, 2025, you earned: <span id="resultE">0.00</span></p>
+            <p>From April 1, 2025, to May 31, 2025, you earned: <span id="resultD">0.00</span> + <span id="resultD2">0.00</span></p>
         </div>
         
         <div class="result">
-            <p>But you should have earned 3% more for last year's pay increase, plus 3% for this year's: <span id="resultF">0.00</span></p>
+            <p>But you should have earned 3% more for last year's pay increase, plus 3% for this year's: <span id="resultE">0.00</span></p>
         </div>
         
         <div class="result">
-            <p>The difference is: <span id="resultG" class="red-result">0.00</span></p>
+            <p>The difference is: <span id="resultF" class="red-result">0.00</span></p>
         </div>
         
         <div class="result">
-            <p>And this should be added to your <span class="green-date">July 10</span> paycheque, so the total should be*: <span id="resultH" class="red-result">0.00</span></p>
+            <p>And this should be added to your <span class="green-date">July 10</span> paycheque, so the total should be: <span id="resultG" class="red-result">0.00</span></p>
         </div>
 
-	</br>
-	
-        <div class="result">
-            <p>As of the <span class="green-date">July 25</span> paycheque, your new pay rate should be 6.09% higher: <span id="resultI" class="red-result">0.00</span></p>
-        </div>
+
 
 	</br>
 	
         <div class="result">
           <p>By stalling the negotiations of the collective agreement,
 	    the university could have made at least
-	    <span id="resultJ">0.00</span>
+	    <span id="resultI">0.00</span>
 	    by investing the money at a measly 2% interest,
-	    from your paycheque alone.
-	    (BOC rate went from 5% to 2.75% during that time.
-	    NASA represents 6000+ staff, so...  Couple of million bucks?)</p>
+	    from your paycheque alone.</p>
         </div>
     </div>
 
@@ -113,16 +114,19 @@
 
     <script>
         const numberInput = document.getElementById('numberInput');
-        //const result1Span = document.getElementById('result1');
-        const result2Span = document.getElementById('result2');
-        const result3Span = document.getElementById('result3');
-        const result4Span = document.getElementById('result4');
+        const marketSupplement = document.getElementById('marketSupplement');
+        const resultASpan = document.getElementById('resultA');
+        const resultA2Span = document.getElementById('resultA2');
+        const resultBSpan = document.getElementById('resultB');
+        const resultCSpan = document.getElementById('resultC');
+        const resultDSpan = document.getElementById('resultD');
+        const resultD2Span = document.getElementById('resultD2');
         const resultESpan = document.getElementById('resultE');
         const resultFSpan = document.getElementById('resultF');
         const resultGSpan = document.getElementById('resultG');
         const resultHSpan = document.getElementById('resultH');
+        const resultH2Span = document.getElementById('resultH2');
         const resultISpan = document.getElementById('resultI');
-        const resultJSpan = document.getElementById('resultJ');
 
         // Set focus to the input field when the page loads
         window.onload = function() {
@@ -130,53 +134,62 @@
         };
       
         numberInput.addEventListener('input', calculateResults);
+        marketSupplement.addEventListener('input', calculateResults);
         
         function calculateResults() {
             const inputValue = parseFloat(numberInput.value) || 0;
+            const supplementValue = parseFloat(marketSupplement.value) || 0;
+            const totalValue = inputValue + supplementValue;
             
-            // Calculation 1: 3% more than input
-            //const result1 = inputValue * 1.03;
-            //result1Span.textContent = result1.toFixed(2);
-
-	    
-            // Calculation 2: 24 times the input
-            const result2 = inputValue * 24;
-            result2Span.textContent = result2.toFixed(2);
+            // Calculation H: Input * 1.03 * 1.03
+            const resultH = inputValue * 1.03 * 1.03;
+            resultHSpan.textContent = resultH.toFixed(2);
             
-            // Calculation 3: input * 24 * 0.03
-            const result3 = inputValue * 24 * 0.03;
-            result3Span.textContent = result3.toFixed(2);
+            // Calculation H2: Market Supplement * 1.03 * 1.03
+            const resultH2 = supplementValue * 1.03 * 1.03;
+            resultH2Span.textContent = resultH2.toFixed(2);
             
-            // Calculation 4: input + result3
-            const result4 = inputValue + (inputValue * 24 * 0.03);
-            result4Span.textContent = result4.toFixed(2);
+            // Calculation A: 24 times the regular salary
+            const resultA = inputValue * 24;
+            resultASpan.textContent = resultA.toFixed(2);
+            
+            // Calculation A2: 24 times the market supplement
+            const resultA2 = supplementValue * 24;
+            resultA2Span.textContent = resultA2.toFixed(2);
+            
+            // Calculation B: (resultA + resultA2) * 0.03
+            const resultB = (resultA + resultA2) * 0.03;
+            resultBSpan.textContent = resultB.toFixed(2);
+            
+            // Calculation C: resultH + resultH2 + resultB
+            const resultC = resultH + resultH2 + resultB;
+            resultCSpan.textContent = resultC.toFixed(2);
 
 	
-            // Calculation E: Input * 6
-            const resultE = inputValue * 6;
+            // Calculation D: Regular salary * 4 (for April 1 to May 31, 2025)
+            const resultD = inputValue * 4;
+            resultDSpan.textContent = resultD.toFixed(2);
+            
+            // Calculation D2: Market supplement * 4 (for April 1 to May 31, 2025)
+            const resultD2 = supplementValue * 4;
+            resultD2Span.textContent = resultD2.toFixed(2);
+            
+            // Calculation E: (D + D2) * 1.03 * 1.03
+            const resultE = (resultD + resultD2) * 1.03 * 1.03;
             resultESpan.textContent = resultE.toFixed(2);
             
-            // Calculation F: E * 1.03 * 1.03
-            const resultF = resultE * 1.03 * 1.03;
+            // Calculation F: E - (D + D2)
+            const resultF = resultE - (resultD + resultD2);
             resultFSpan.textContent = resultF.toFixed(2);
             
-            // Calculation G: F - E
-            const resultG = resultF - resultE;
+            // Calculation G: resultH + resultH2 + resultF
+            const resultG = resultH + resultH2 + resultF;
             resultGSpan.textContent = resultG.toFixed(2);
-            
-            // Calculation H: Input + G
-            const resultH = inputValue + resultG;
-            resultHSpan.textContent = resultH.toFixed(2);
 
 	
-            // Calculation I: Input * 1.03 * 1.03
-            const resultI = inputValue * 1.03 * 1.03;
+            // Calculation I: (ResultB + ResultF) * factors
+            const resultI = (resultB*0.1506 + resultF*0.0048);
             resultISpan.textContent = resultI.toFixed(2);
-
-	
-            // Calculation J: (Result3 + Result7) * 1.02
-            const resultJ = (result3*0.1506 + resultG*0.0048);
-            resultJSpan.textContent = resultJ.toFixed(2);
         }
     </script>
 </body>
